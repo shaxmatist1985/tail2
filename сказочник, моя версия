@@ -1,0 +1,105 @@
+#Cказочник
+#Создает рассказ на основе пользовательского ввода
+from tkinter import *
+class Application(Frame):
+    '''GUI - приложение, создающее рассказ на основе пользовательского ввода.'''
+    def __init__(self, master):
+        '''Инициализирует рамку.'''
+        super(Application, self).__init__(master)
+        self.grid()
+        self.create_widgets()
+    def create_widgets(self):
+        '''Создает элементы управления, с помощью которых пользователь будет вводить исходные данные
+        и получать готовый рассказ.'''
+        #метка с текстом-инструкцией
+        Label(self,
+              text ='Введите данные для создания нового рассказа'
+              ).grid(row = 0, column = 0, columnspan = 2, sticky = W)
+        #метка и поле ввода для имени человека
+        Label(self, text = 'Имя человека: '
+              ).grid(row = 1, column = 0, sticky = W)
+        self.person_ent = Entry(self)
+        self.person_ent.grid(row =1, column = 2, sticky =W)
+        # переменная, содержащая название одного из слов
+        self.word = StringVar()
+        self.word.set(None)
+        # переключатель с названиями магазинов
+        word = ["сказочник", "рассказчик", "писатель"]
+        column = 1
+        for part in word:
+            Radiobutton(self, text=part, variable=self.word, value=part
+                        ).grid(row=2, column=column, sticky=W)
+            column += 1
+        #метка и поле ввода для слова
+        Label(self,
+              text ="слово:"
+              ).grid(row =2, column = 0, sticky = W)
+
+        #метка при группе флажков с продуктами
+        Label(self, text ='Продукты:'
+              ).grid(row =4, column = 0, sticky = W)
+        #флажок со словом "хлеб"
+        self.is_bred = BooleanVar()
+        Checkbutton(self, text ='хлеб',
+                    variable= self.is_bred
+                    ).grid(row =4, column =1, sticky = W)
+        # флажок со словом "молоко"
+        self.is_milk = BooleanVar()
+        Checkbutton(self, text='молоко',
+                    variable=self.is_milk
+                    ).grid(row=4, column=2, sticky=W)
+        # флажок со словом "coк"
+        self.is_juice = BooleanVar()
+        Checkbutton(self, text='сок',
+                    variable=self.is_juice
+                    ).grid(row=4, column=3, sticky=W)
+        #метка при переключателе с названиями магазинов
+        Label(self, text = 'Магазин:'
+              ).grid(row =5, column = 0, sticky = W)
+        #переменная, содержащая название одного из магазинов
+        self.shop = StringVar()
+        self.shop.set(None)
+        #переключатель с названиями магазинов
+        shop = ["пятерочка", "магнит", "иске элмэт"]
+        column = 1
+        for part in shop:
+            Radiobutton(self, text = part, variable= self.shop, value = part
+                        ).grid(row =5, column = column, sticky = W)
+            column += 1
+        #кнопка отсылки данных
+        Button(self, text ='Получить рассказ',
+               command = self.tell_story
+               ).grid(row =6, column = 0, sticky = W)
+        self.story_text = Text(self, width =75, height = 10, wrap = WORD)
+        self.story_text.grid(row = 7, column = 0, columnspan =4)
+    def tell_story(self):
+        '''Заполняет текстовую область очередной историей на основе пользовательского ввода.'''
+        #get values from GUI
+        person = self.person_ent.get()
+        word = self.word.get()
+
+        product = ''
+        if self.is_milk.get():
+            product += 'молоко,'
+        if self.is_juice.get():
+            product += 'сок,'
+        if self.is_bred.get():
+            product += 'хлеб,'
+        shop = self.shop.get()
+        #создание рассказа
+        story ='Я с '
+        story += person + 'ом'
+        story += ' решил поити в магазин ' + shop
+
+        story += ', мы хорошо погуляли.'
+        story += "Мне нужно было купить " + product + 'сметану.'
+        story +=  " Я долго думал чтобы написать, из меня плохой "+ word
+
+        #вывод рассказа на экран
+        self.story_text.delete(0.0, END)
+        self.story_text.insert(0.0, story)
+#основная часть
+root =Tk()
+root.title('Сказочник')
+app = Application(root)
+root.mainloop()
